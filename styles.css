@@ -29,10 +29,13 @@ div.box {
 input.boxes {
     width: 5vw;
     height: 5vw;
+
     font-size: 3vw;
     font-family:Arial, Helvetica, sans-serif;
+    text-align: center;
 
     box-sizing: border-box;
+    caret-color: transparent;
 }
 
 p {
@@ -59,3 +62,10 @@ p.wrong {
     background-color: grey;
 }
 
+input.empty-box {
+    border: none;
+    caret-color: transparent;
+    background-color: transparent;
+    font-size: 0px;
+    
+}
