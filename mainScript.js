@@ -160,13 +160,16 @@ getWords().then((words) => {
 
                     if (guess[i] == word.charAt(i)) {//If the user is right, mark green
                         document.getElementById(pos[0] + "," + (i + 1)).className = "right";
+                        document.getElementById(guess[i]).className = "letter " + guess[i] + " right";
 
                     } else if (word.includes(guess[i])) {//right letter wrong place, mark yellow
                         document.getElementById(pos[0] + "," + (i + 1)).className = "almost-right";
+                        document.getElementById(guess[i]).className = "letter " + guess[i] + " almost-right";
                         correct = false;
 
                     } else {//wrong letter, mark grey
                         document.getElementById(pos[0] + "," + (i + 1)).className = "wrong";
+                        document.getElementById(guess[i]).className = "letter " + guess[i] + " wrong";
                         correct = false;
                     }
                 }
