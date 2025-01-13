@@ -1,8 +1,16 @@
 var boxes = document.getElementsByClassName("boxes");
 const pos = [1, 1];
-var words = ["nikki", "loves"];
+var words;
 
-const word = words[Math.floor(Math.random() * words.length)];
+const fs = new FileReader();//require('fs');
+
+fs.readFile('5-letter Words.txt', (err, data) => {
+  if (err) throw err;
+
+  console.log(data.toString());
+});
+
+const word = words[Math.floor(Math.random() * words.length)].toUpperCase();
 console.log(words);
 console.log(word);
 var counts = [];
@@ -30,29 +38,29 @@ for (var i = 0; i < 30; i++) {
     boxes[i].addEventListener("click", unclick);
 }
 
-document.getElementById("-1").addEventListener("keydown", changeBox);
+//document.getElementById("-1").addEventListener("keydown", changeBox);
 
 /**Makes it so if you click off the text box, the
  * game automatically takes you back to the correct spot
  */
-var dummy = document.getElementsByTagName("body");
-dummy[0].addEventListener("click", highlightCurrent);
+document.addEventListener("click", highlightCurrent);
+document.addEventListener("keydown", globalChange); //Used for backspace and enter on final key
 
 /** Registers which key the user presses and changes the 
  * game accordingly.
  */
 function changeBox(event) {
-    console.log(event.keyCode);
     if (event.keyCode >= 65 && event.keyCode <= 90 && pos[1] != -1) {
         
         event.preventDefault(); // Prevent the default keypress behavior
 
-        addLetter.call(this, event.key);
+        addLetter.call(this, event.key.toUpperCase());
+
     } else if (event.keyCode == 13 && pos[1] == -1) {
-        console.log("Enter Recieved");
         checkAnswer.call(this);
 
     } else if (event.keyCode == 8 && (pos[1] > 1 || pos[1] == -1)) { //For when backspace is pressed
+        guess.pop();
 
         if (pos[1] == -1) {
             pos[1] = 6;
@@ -82,7 +90,7 @@ function addLetter(letter) {
         if (pos[1] > 5) {
             pos[1] = -1;
 
-            document.getElementById("-1").focus();
+            //document.getElementById("-1").focus();
 
         } else {
             var next = document.getElementById(pos[0] + "," + pos[1]).children[0];
@@ -95,12 +103,26 @@ function addLetter(letter) {
 }
 
 /**
+ * This function is used when the user has entered the last letter in the row.
+ * It checks if the user then presses enter or backspace, and adjusts the
+ * screen as such.
+ * @param {} event 
+ */
+function globalChange(event) {
+    if (pos[1] == -1) {
+        changeBox(event);
+    }
+}
+
+/**
  * When the user presses enter, this method will compare their guess to the correct answer
  * and color the guessed letter accordingly.
  */
 function checkAnswer() {
     if (pos[1] == -1) {
         let correct = true;
+        console.log(guess);
+        console.log(word);
 
         for (var i = 0; i < 5; i++) {
 
@@ -135,19 +157,25 @@ function winner() {
 }
 
 /**
- * Ensures the user can only press on the box they're typing in
+ * Ensures the user can only type in the box they're supposed
+ * to type in by bluring other boxes and highlighting the
+ * current box.
  */
 function unclick() {
-    if (this.parentElement.id != pos[0] + "," + pos[1]) {
+    if (this.className == "boxes") {
         this.blur();
+    }
+
+    if (pos[1] != -1) {
         highlightCurrent();
     }
 }
 
+/**
+ * Highlights the current cell the user will type in
+ */
 function highlightCurrent() {
-    var temp = "";
-    if(pos[1] != -1) {
-        temp += pos[0] + ",";
+    if (pos[1] != -1) {
+        document.getElementById(pos[0] + "," + pos[1]).children[0].focus();
     }
-    document.getElementById(temp + pos[1]).children[0].focus()
 }
