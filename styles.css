@@ -2,39 +2,53 @@ body {
     text-align: center;
 }
 
+h1 {
+    font-size: 62px;
+}
+
+div .title-container {
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
 div.row {
     text-align: center;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 div.margin {
-    width: 35vw;
+    width: 50vw;
+    height: 75px;
 }
 
 div.input-boxes {
-    width: 30vw;
-    height: 6vw;
+    width: 400px;
+    height: 75px;
     align-items: center;
     display: flex;
     flex-direction: row;
 }
 
 div.box {
-    width: 6vw;
-    height: 6vw;
-    margin: auto;
+    width: 62px;
+    height: 62px;
+    margin: 4px;
 }
 
 input.boxes {
-    width: 5vw;
-    height: 5vw;
+    width: 62px;
+    height: 62px;
 
-    font-size: 3vw;
+    font-size: 31px;
     font-family:Arial, Helvetica, sans-serif;
     text-align: center;
     font-weight: bold;
-    line-height: 6vwh;
+    /*line-height: 62px;*/
 
     box-sizing: border-box;
     caret-color: transparent;
@@ -42,13 +56,13 @@ input.boxes {
 
 p {
     text-align: center;
-    font-size: 3vw;
+    font-size: 31px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    line-height: 6vh;
+    line-height: 62px;
 
-    width: 5vw;
-    height: 5vw;
+    width: 62px;
+    height: 62px;
     margin: auto;
 
     border: 3px solid black
@@ -71,5 +85,24 @@ input.empty-box {
     caret-color: transparent;
     background-color: transparent;
     font-size: 0px;
+}
+
+.hide {
+    display: none;
+}
+
+.spacer {
+    height: 62px;
+}
+
+.letter-box {
+    display: flex;
+    flex-direction: row;
+    margin: 2px;
+}
+
+.letter {
+    width: 45px;
+    border-radius: 15%;
     
 }
