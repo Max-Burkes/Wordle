@@ -9,7 +9,7 @@ var Words;
  * @returns 
  */
 function getWords() {
-    return fetch ("https://gist.githubusercontent.com/shmookey/b28e342e1b1756c4700f42f17102c2ff/raw/ed4c33a168027aa1e448c579c8383fe20a3a6225/WORDS")
+    return fetch ("https://raw.githubusercontent.com/Max-Burkes/Wordle/refs/heads/main/5-letter%20Words.txt")
         .then((response) => {
             if (!response.ok) {
                 throw new Error('HTTP error! stats:', response.status)
@@ -40,16 +40,17 @@ getWords().then((words) => {
 
     const word = Words[Math.floor(Math.random() * Words.length)].toUpperCase();
     console.log(word);
+
     var counts = [];
     var guess = [];
 
-    var menuUp = false;
+    //var menuUp = false;
 
     /**
      * Counts the occurence of letters in the word
      */
     for (var i = 0; i < 5; i++) {
-        if (counts.includes(word.charAt(i))) {
+        if (Object.keys(counts).includes(word.charAt(i))) {
             counts[word.charAt(i)] += 1;
         } else {
             counts[word.charAt(i)] = 1;
@@ -63,6 +64,7 @@ getWords().then((words) => {
     for (var i = 0; i < 30; i++) {
         boxes[i].addEventListener("keydown", changeBox);
         boxes[i].addEventListener("click", unclick);
+        boxes[i].addEventListener("focus", unclick);
     }
 
     //document.getElementById("-1").addEventListener("keydown", changeBox);
@@ -149,6 +151,12 @@ getWords().then((words) => {
         if (pos[1] == -1) {
             let correct = true;
 
+            let countsCopy = [];
+
+            for (var key in counts) {
+                countsCopy[key] = counts[key];
+            }
+
             let guessString = "";
             for (let i = 0; i < 5; i++) {
                 guessString += guess[i];
@@ -159,10 +167,12 @@ getWords().then((words) => {
                 for (let i = 0; i < 5; i++) {
 
                     if (guess[i] == word.charAt(i)) {//If the user is right, mark green
+                        countsCopy[guess[i]] -= 1;
                         document.getElementById(pos[0] + "," + (i + 1)).className = "right";
                         document.getElementById(guess[i]).className = "letter " + guess[i] + " right";
 
-                    } else if (word.includes(guess[i])) {//right letter wrong place, mark yellow
+                    } else if (word.includes(guess[i]) && countsCopy[guess[i]] > 0) {//right letter wrong place, mark yellow
+                        countsCopy[guess[i]] -= 1;
                         document.getElementById(pos[0] + "," + (i + 1)).className = "almost-right";
                         document.getElementById(guess[i]).className = "letter " + guess[i] + " almost-right";
                         correct = false;
@@ -172,18 +182,30 @@ getWords().then((words) => {
                         document.getElementById(guess[i]).className = "letter " + guess[i] + " wrong";
                         correct = false;
                     }
+                    console.log(countsCopy);
                 }
 
-                if(correct) {
+                if(correct) { //initiates win sequence
                     winner();
 
-                } else {
+                } else { //If the user doesn't win, then the game moves to next row
                     pos[0] += 1;
                     pos[1] = 1;
+
+                    if (pos[0] > 6) { //If no more rows are left, the user loses
+                        setTimeout( function () {
+                            alert("You lost. The word was " + word + ". Play again?");
+                        }, 0);
+                        location.reload();
+                    }
+
                     document.getElementById(pos[0] + "," + pos[1]).children[0].focus();
 
                     guess = [];
                 }
+
+                console.log("");
+
             } else {
                 alert("Not a real word");
             }
@@ -203,11 +225,13 @@ getWords().then((words) => {
      * current box.
      */
     function unclick() {
-        if (this.className == "boxes") {
+        console.log(this.parentElement);
+        console.log(pos[0] + " " +pos[1])
+        if (this.className == "boxes" && this.parentElement.id != pos[0] + "," +pos[1]) {
             this.blur();
         }
 
-        if (pos[1] != -1) {
+        if (pos[1] != -1 && this.parentElement.id != pos[0] + "," +pos[1]) {
             highlightCurrent();
         }
     }
