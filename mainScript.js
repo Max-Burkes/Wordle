@@ -164,25 +164,42 @@ getWords().then((words) => {
             
             if (words.includes(guessString.toLowerCase())) {
 
+                let currentLetter;
+                let currentKey;
                 for (let i = 0; i < 5; i++) {
+                    currentLetter = document.getElementById(pos[0] + "," + (i + 1));
+                    currentKey = document.getElementById(guess[i]);
 
                     if (guess[i] == word.charAt(i)) {//If the user is right, mark green
                         countsCopy[guess[i]] -= 1;
-                        document.getElementById(pos[0] + "," + (i + 1)).className = "right";
-                        document.getElementById(guess[i]).className = "letter " + guess[i] + " right";
+                        currentLetter.className = "right";
+                        currentKey.className = "letter " + guess[i] + " right";
+                    }
+                    
+                }
 
-                    } else if (word.includes(guess[i]) && countsCopy[guess[i]] > 0) {//right letter wrong place, mark yellow
+                for (let i = 0; i < 5; i++) {
+                    currentLetter = document.getElementById(pos[0] + "," + (i + 1));
+                    currentKey = document.getElementById(guess[i]);
+
+                    if (word.includes(guess[i]) && countsCopy[guess[i]] > 0 && currentLetter.className != "right") {//right letter wrong place, mark yellow
                         countsCopy[guess[i]] -= 1;
-                        document.getElementById(pos[0] + "," + (i + 1)).className = "almost-right";
-                        document.getElementById(guess[i]).className = "letter " + guess[i] + " almost-right";
+                        currentLetter.className = "almost-right";
+
+                        if (currentKey.className != "letter " + guess[i] + " right") {
+                            currentKey.className = "letter " + guess[i] + " almost-right";
+                        }
+
                         correct = false;
 
-                    } else {//wrong letter, mark grey
-                        document.getElementById(pos[0] + "," + (i + 1)).className = "wrong";
-                        document.getElementById(guess[i]).className = "letter " + guess[i] + " wrong";
+                    } else if (currentLetter.className != "right"){//wrong letter, mark grey
+                        currentLetter.className = "wrong";
+
+                        if (currentKey.className != "letter " + guess[i] + " right" &&  currentKey.className != "letter " + guess[i] + " almost-right") {
+                            currentKey.className = "letter " + guess[i] + " wrong";
+                        }
                         correct = false;
                     }
-                    console.log(countsCopy);
                 }
 
                 if(correct) { //initiates win sequence
@@ -204,8 +221,6 @@ getWords().then((words) => {
                     guess = [];
                 }
 
-                console.log("");
-
             } else {
                 alert("Not a real word");
             }
@@ -225,8 +240,6 @@ getWords().then((words) => {
      * current box.
      */
     function unclick() {
-        console.log(this.parentElement);
-        console.log(pos[0] + " " +pos[1])
         if (this.className == "boxes" && this.parentElement.id != pos[0] + "," +pos[1]) {
             this.blur();
         }

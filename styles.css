@@ -106,3 +106,13 @@ input.empty-box {
     border-radius: 15%;
     
 }
+
+#enter {
+    width: 90px;
+    border-radius: 10%;
+}
+
+#backspace {
+    width: 90px;
+    border-radius: 10%;
+}
